@@ -1,54 +1,40 @@
 import React, { Component } from 'react';
-import { addRestaurant } from '../actions/restaurants';
-import { connect } from 'react-redux';
+import { addRestaurant } from '../actions/restaurants'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 export class RestaurantInput extends Component {
-
-  state = {
-    name: '',
-    location: ''
+  constructor(props){
+    super(props)
+    this.state = {name: '', location: ''}
   }
-
-  handleOnNameChange = event => {
-    this.setState({
-      name: event.target.value
-    });
+  handleOnNameChange(event){
+    this.setState({name: event.target.value})
   }
-
-  handleOnLocationChange = event => {
-    this.setState({
-      location: event.target.value
-    });
+  handleOnLocationChange(event){
+    this.setState({location: event.target.value})
   }
-
-  handleOnSubmit = event => {
-    event.preventDefault();
-    // add missing code
+  handleOnSubmit(event){
+    event.preventDefault()
+    this.props.addRestaurant(this.state)
   }
-
-  render() {
+  render(){
     return(
-      <form onSubmit={(event) => this.handleOnSubmit(event)}>
-        <p>
-          <input
-            type="text"
-            onChange={(event) => this.handleOnNameChange(event)}
-            id="name"
-            placeholder="restaurant name" />
-        </p>
-        <p>
-          <input
-            type="text"
-            onChange={(event) => this.handleOnLocationChange(event)}
-            id="location"
-            placeholder="location" />
-        </p>
+      <form onSubmit={this.handleOnSubmit.bind(this)}>
+      <p>
+        <input type="text" onChange={this.handleOnNameChange.bind(this)} placeholder="restaurant name"/>
+      </p>
+      <p>
+        <input type="text" onChange={this.handleOnLocationChange.bind(this)} placeholder="location"/>
+      </p>
         <input type="submit" />
       </form>
-    );
+    )
   }
-};
+}
 
+export const ConnectedRestaurantInput = connect(null, mapDispatchToProps)(RestaurantInput)
 
-//connect this component by wrapping RestaurantInput below
-export default RestaurantInput
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({addRestaurant: addRestaurant}, dispatch)
+}
